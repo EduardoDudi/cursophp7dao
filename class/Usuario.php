@@ -1,48 +1,62 @@
 <?php
 
-	class Sql extends PDO{
-		
-		private $conn;
-		//__construct vai conectar automaticamente no banco de dados quando usar o NEW
-		public function __construct(){
-			//conectar com o banco de dados mysql
-			$this->conn = new PDO("mysql:host=localhost:3308; dbname=dbphp7", "root", "");
+	class Usuario {
+		private $idusuario;
+		private $deslogin;
+		private $dessenha;		
+		private $dtcadastro;
+
+		public function getIdusuario(){
+			return $this->idusuario;
 		}
 
-		//$statment = Representa uma instrução preparada e, após a instrução ser executada, um conjunto de resultados associado responsável por preparar a query SQL 
+		public function setIdusuario($value){
+			$this->idusuario = $value;
+		}
 
-		private function setParams($statment, $parameters = array()){
-			//ASSOCIAR PARAMETROS
-			foreach ($parameters as $key => $value) {
-				
-				//AQUI mesma coisa como era feito: na aula pdo ex: 5 / $stmt->bindParam(":LOGIN", $login);
-				$this->setParam($key, $value);
+		public function getDeslogin(){
+			return $this->deslogin;
+		}
+		public function setDeslogin($value){
+			$this->deslogin = $value;
+		}
+		public function getDessenha(){
+			return $this->dessenha;
+		}
+		public function setDessenha($value){
+			$this->dessenha = $value;
+		}
+		public function getDtcadastro(){
+			return $this->dtcadastro;
+		}
+		public function setDtcadastro($value){
+			$this->dtcadastro = $value;
+		}
+		//carregue pelo ID
+		public function loadByid($id){
+			$sql = new Sql();
+			$results = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(
+				":ID"=>$id
+			));
+			//isset se isso aqui existe...
+			if (count($results) > 0) {
+				$row = $results[0];
+
+				$this->setIdusuario($row['idusuario']);
+				$this->setDeslogin($row['deslogin']);
+				$this->setDessenha($row['dessenha']);
+				$this->setDtcadastro(new DateTime($row['dtcadastro']));
 			}
 		}
-						//parametro só 
-		private function setParam($statment, $key, $value ){
-			//(bindParam) informar valores dinamicamente para uma requisição SQL usando PHP
-			$statment->bindParam($key, $value); 
-		}
-		//parte de executar comandos
-		//rawQuery é uma query bruta que vc vai usar ela mais tarde
-		//Params parametros ou dados que vamos puxar do banco
-		public function query($rawQuery, $params = array()){
-			//stmt n precisa usar $this para chamar ela ela so funciona dentro desse metodo/funcao
-			//PREPARE prepara uma operação no banco de dados, logo se faz necessário a utilização de outros métodos como execute por exemplo
-			$stmt = $this->conn->prepare($rawQuery);
 
+		public function __toString(){
+			return json_encode(array(
+				"idusuario"=>$this->getIdusuario(),
+				"deslogin"=>$this->getDeslogin(),
+				"dessenha"=>$this->getDessenha(),
+				"dtcadastro"=>$this->getDtcadastro()->format("d/m/Y H:i:s")
 
-			$this->setParams($stmt, $params);
-
-			$stmt->execute();
-			return $stmt;
-		}
-		//metodo para o select mysql 
-		public function select($rawQuery, $params = array()):array{
-			$stmt = $this->query($rawQuery, $params);
-
-			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+			));
 		}
 	}
 

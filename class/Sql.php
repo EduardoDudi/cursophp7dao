@@ -16,7 +16,7 @@
 			foreach ($parameters as $key => $value) {
 				
 				//AQUI mesma coisa como era feito: na aula pdo ex: 5 / $stmt->bindParam(":LOGIN", $login);
-				$this->setParam($key, $value);
+				$this->setParam($statment, $key, $value);
 			}
 		}
 						//parametro só 
