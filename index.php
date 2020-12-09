@@ -2,16 +2,33 @@
 
 	require_once ("config.php");
 
-
-
+	//excluir/deletar usuario da tabela
 
 	$usuario = new Usuario();
-	//carregamos o usuario id 8 
-	$usuario->loadByid(8);
-	//agora vamos atualizar suas infos
-	$usuario->update("novousuario", "novaSenha");
-
+	$usuario->loadByid(7);
+	$usuario->deletar();
 	echo $usuario;
+
+
+
+
+
+
+
+
+
+
+	//alterar um usuario
+	//$usuario = new Usuario();
+	//carregamos o usuario id 8 
+	//$usuario->loadByid(8);
+	//agora vamos atualizar suas infos
+	//$usuario->update("novousuario", "novaSenha");
+	//echo $usuario;
+
+
+
+
 
 	//foi usado metodo construc sendo assim pode passar os dados no dentro USAURIO()
 	//Inserindo um novo aluno 	
@@ -20,6 +37,8 @@
 
 	//$aluno->insert();
 	//echo $aluno;
+
+
 
 
 
